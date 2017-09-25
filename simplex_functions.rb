@@ -12,7 +12,7 @@ def create_matrix_identity(size)
    m
 end
 
-#criar matrix de acordo com a dimensão dada 
+#printar matrix com destaque nos parametros passados
 def print_matrix(m, row = nil, col = nil, rbold = nil)
    print "\n"
    for i in 0..m.size-1
@@ -20,7 +20,7 @@ def print_matrix(m, row = nil, col = nil, rbold = nil)
       for j in 0..m[i].size-1
          n = m[i][j].round(2)
          
-         #n = n.to_r.rationalize(Rational('0.01'))
+         #n = n.to_r.rationalize(Rational('0.01')) #printar em fração
          #n = n.numerator if n.denominator == 1
 
          if row==i&&col==j
