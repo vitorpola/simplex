@@ -18,15 +18,19 @@ def print_matrix(m, row = nil, col = nil, rbold = nil)
    for i in 0..m.size-1
       print "|\t"
       for j in 0..m[i].size-1
-         n = m[i][j].round(2)
-         
-         #n = n.to_r.rationalize(Rational('0.01')) #printar em fração
-         #n = n.numerator if n.denominator == 1
+         n = m[i][j]
+         if n.is_a? Numeric
+            #n = n.round(2)
+            n = n.to_r.rationalize(Rational('0.005')) #printar em fração
+            n = n.numerator if n.denominator == 1
 
-         if row==i&&col==j
-            print n.to_s.reverse_color
-         elsif rbold == i
-            print n.to_s.bold.bg_blue
+            if row==i&&col==j
+               print n.to_s.reverse_color
+            elsif rbold == i
+               print n.to_s.bold.bg_blue
+            else
+               print n
+            end
          else
             print n
          end
@@ -57,14 +61,19 @@ def join_matrix(m_input, m_id)
          m_result[i][j+n_cols-1] = m_id[i][j]
       end
    end
+   for i in 0..nc_id-1
+
+      m_result[i].unshift( i==0? 'Z' : 'X'+ (i+n_cols-1).to_s)
+   end
    m_result
+
 end
 
 #encontra o menor da primeira linha da matriz, retorna [menor num, indice coluna]
 def find_lower_negative(m)
    lower = 0
    col = -1
-   for j in 0..m[0].size-1
+   for j in 1..m[0].size-1
       if m[0][j] < lower
          lower = m[0][j]
          col = j 
@@ -85,13 +94,14 @@ def find_pivot(col, m)
          row = i 
       end
    end
+   m[row][0] = 'X' + (col-1).to_s
    print "Encontrar o pívot".italic.blue
    row
 end
 
 # dividir todas celulas da linha pelo valor do pivot
 def divide_line_by(i,pivot, m)
-   for j in 0..m[0].size-1
+   for j in 1..m[0].size-1
       m[i][j] /= pivot.to_f
    end
    print "Dividir L#{i} por #{pivot}".italic.blue   
@@ -122,10 +132,16 @@ def show_solution(m)
    n_rows = m.size
    n_vars = m[0].size - n_rows - 1
    print "\nMELHOR SOLUÇÃO:\n".bold
-   for j in 0..n_vars
-      for i in 0..n_rows-1
-         puts (" " + (j==0 ? 'Z ' : 'X'+j.to_s) + " = " + m[i][m[0].size-1].round(2).to_s ).bold.green if m[i][j] != 0
+   puts "Z = #{m[0][m[0].size-1].round(2).to_s}".bold.green
+   for v in 1..n_vars-1
+      for i in 1..n_rows-1
+         if m[i][0] == 'X'+v.to_s
+            puts "X#{v} = #{m[i][m[0].size-1].round(2).to_s}".bold.green
+            i=0
+            break
+         end
       end
+      puts "X#{v} = 0.0".bold.green if i == n_rows-1            
    end
    print "\n"
 end
