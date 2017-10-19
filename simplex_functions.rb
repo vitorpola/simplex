@@ -1,5 +1,3 @@
-$table_counter = 0
-
 #cria uma matrix identidade 
 def create_matrix_identity(size)
    m = Array.new #inicializar um array
@@ -20,9 +18,9 @@ def print_matrix(m, row = nil, col = nil, rbold = nil)
       for j in 0..m[i].size-1
          n = m[i][j]
          if n.is_a? Numeric
-            #n = n.round(2)
-            n = n.to_r.rationalize(Rational('0.005')) #printar em fração
-            n = n.numerator if n.denominator == 1
+            n = n.round(2)
+            #n = n.to_r.rationalize(Rational('0.005')) #printar em fração
+            #n = n.numerator if n.denominator == 1
 
             if row==i&&col==j
                print n.to_s.reverse_color
@@ -73,8 +71,8 @@ end
 def find_lower_negative(m)
    lower = 0
    col = -1
-   for j in 1..m[0].size-1
-      if m[0][j] < lower
+   for j in 1..m[0].size-2
+      if lower > m[0][j] #|| (lower == m[0][j] && lower != 0)
          lower = m[0][j]
          col = j 
       end
@@ -87,14 +85,15 @@ def find_pivot(col, m)
    aux = 999999
    row = 0
    num_cols = m[0].size
-   for i in 1..m.size-1
+   init = m[0][0] == 'z' ? 1:2
+   for i in init..m.size-1
       div = (m[i][col] != 0) ? (m[i][num_cols-1] / m[i][col]) : -1
       if div < aux && div >= 0
          aux = div
          row = i 
       end
    end
-   m[row][0] = 'X' + (col-1).to_s
+   m[row][0] = 'X' + (col).to_s
    print "Encontrar o pívot".italic.blue
    row
 end
@@ -116,6 +115,7 @@ def execute(m,row,col)
          for j in 1..m[0].size-1
             if i != row 
                m[i][j] -= (aux * m[row][j]).to_f
+               m[i][j] = 0 if m[i][j] > -0.001 && m[i][j] < 0.001
             end            
          end
          if i != row 
@@ -130,13 +130,13 @@ end
 #encontra a solução e imprime
 def show_solution(m)
    n_rows = m.size
-   n_vars = m[0].size - n_rows - 1
+   n_vars = m[0].size - n_rows
    print "\nMELHOR SOLUÇÃO:\n".bold
-   puts "Z = #{m[0][m[0].size-1].round(2).to_s}".bold.green
+   puts "Z = #{m[0][m[0].size-1].abs.round(2).to_s}".bold.green
    for v in 1..n_vars-1
       for i in 1..n_rows-1
          if m[i][0] == 'X'+v.to_s
-            puts "X#{v} = #{m[i][m[0].size-1].round(2).to_s}".bold.green
+            puts "X#{v} = #{m[i][m[0].size-1].round(4).to_s}".bold.green
             i=0
             break
          end
