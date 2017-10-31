@@ -94,7 +94,7 @@ def find_pivot(col, m)
       end
    end
    m[row][0] = 'X' + (col).to_s
-   print "Encontrar o pívot".italic.blue
+   print "Encontrar o pívot =>  m[#{row}][#{col}] = #{m[row][col]}".italic.blue
    row
 end
 
@@ -119,8 +119,8 @@ def execute(m,row,col)
             end            
          end
          if i != row 
-            print "L#{i} = L#{i}-#{aux<0 ? '('+aux.to_s+')': aux}L#{row}".italic.blue
-            print_matrix(m,row,col, i)
+            print "L#{i} = L#{i}-#{aux<0 ? '('+aux.to_s+')': aux}L#{row} \n".italic.blue
+            #print_matrix(m,row,col, i)
          end            
       end
    end
